@@ -61,6 +61,13 @@ test_data = {
     "experiments": {"method":["popup"],"daily":["test", "experiment 2"],"weekly":["test2"]},
 }
 
+test_results = {
+ "results" : [ {"subs_id" : 1 , "activity_id" : ["CMIP", "ScenarioMIP"],  "experiment_id" : ["historical", "ssp226"]} 
+ {"subs_id" : 2 , "variable_id" : ["tas", "pr"],  "experiment_id" : ["piControl"] } ]
+  
+}
+
+
 # To pass data to front-end, use react-props and pass it a dictionary with key-value pairs
 react_props = test_data
 
