@@ -22,8 +22,8 @@ import json
 # Get directories for static files
 package_dir = os.path.dirname(os.path.abspath(__file__))
 static_dir = os.path.dirname(package_dir)
-js_dir = os.path.join(static_dir,"static/cog/cog-react/js/")
-css_dir = os.path.join(static_dir,"static/cog/cog-react/css/")
+js_dir = os.path.join(static_dir, "static/cog/cog-react/js/")
+css_dir = os.path.join(static_dir, "static/cog/cog-react/css/")
 
 # Get static list
 js_files = os.listdir(js_dir)
@@ -56,20 +56,22 @@ react_files = {
 # Example data that subscriptions front-end could receive from back-end
 test_data = {
     "post_url": "/subscription/",
-    "user_info": {"first":"John","last":"Doe","hobbies":"Programming.","send_emails_to":"This place."},
-    "activities": {"method":["email"],"weekly":["CMIP"],"monthly":["CMIP6"]},
-    "experiments": {"method":["popup"],"daily":["test", "experiment 2"],"weekly":["test2"]},
+    "user_info": {"first": "John", "last": "Doe", "hobbies": "Programming.", "send_emails_to": "This place."},
+    "activities": {"method": ["email"], "weekly": ["CMIP"], "monthly": ["CMIP6"]},
+    "experiments": {"method": ["popup"], "daily": ["test", "experiment 2"], "weekly": ["test2"]},
 }
-
+# Sub_freq: [0,3], 0='Daily',1='Weekly',2='Bi-weekly', 3='Monthly'
+# Sub_day: [0,6], 0='Mon',1='Tues'...6='Sun'.
+# e.g: 00='Daily/Mon', 23='Biweekly/Thurs'
 test_results = {
- "results" : [ {"subs_id" : 1 , "activity_id" : ["CMIP", "ScenarioMIP"],  "experiment_id" : ["historical", "ssp226"]} 
- {"subs_id" : 2 , "variable_id" : ["tas", "pr"],  "experiment_id" : ["piControl"] } ]
-  
+    "results": [{"subs_id": 1, "activity_id": ["CMIP", "ScenarioMIP"],  "experiment_id": ["historical", "ssp226"], "sub_freq": "01"}, 
+    {"subs_id": 2, "variable_id": ["tas", "pr"],  "experiment_id": ["piControl"], "sub_freq": "12"}]
 }
 
 
 # To pass data to front-end, use react-props and pass it a dictionary with key-value pairs
 react_props = test_data
+
 
 def lookup_and_render(request):
 
@@ -99,13 +101,14 @@ def delete_subscription(request):
 
     return render(request, 'cog/subscription/subs_delete_done.html')
 
+
 def temp_print(request, var_name, method="POST"):
     print(request.POST)
     if request.method == "POST":
         data = json.loads(request.body)
     else:
         data = request.GET.copy()
-    
+
     if(data):
         try:
             print("{} {}: {}".format(method, var_name, data[var_name]))
@@ -113,6 +116,7 @@ def temp_print(request, var_name, method="POST"):
             print("Key error: {}".format(data))
     else:
         print("{} {}: None".format(method, var_name))
+
 
 @login_required
 def subscribe(request):
@@ -129,8 +133,8 @@ def subscribe(request):
                 print("{}: {}".format(key, data[key]))
 
         # Example response sent back to front-end
-        test = {"status": "All good!","data": data}
-        return HttpResponse(json.dumps(test),content_type='application/json')
+        test = {"status": "All good!", "data": data}
+        return HttpResponse(json.dumps(test), content_type='application/json')
 
     if request.method == 'GET':
         if request.GET.get('action') == "modify":
